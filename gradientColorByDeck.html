@@ -1,0 +1,145 @@
+<html>
+  <head>
+    <!--<script src="https://unpkg.com/deck.gl@8.0.9/dist.min.js"></script> -->
+    <script src="https://unpkg.com/deck.gl@8.1.0/dist.min.js"></script>
+    <!-- only if base map is needed -->
+    <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v1.2.0/mapbox-gl.js"></script>
+    <link
+      href="https://api.tiles.mapbox.com/mapbox-gl-js/v1.2.0/mapbox-gl.css"
+      rel="stylesheet"
+    />
+
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      #map {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="map">
+      <div id="viewState" class="mapViewStateContainer"></div>
+    </div>
+  </body>
+  <script type="text/javascript">
+    // token from: https://docs.mapbox.com/mapbox-gl-js/example/simple-map/
+
+    const deckgl = new deck.DeckGL({
+      mapboxApiAccessToken:
+        "pk.eyJ1Ijoic3ltYm9saXgiLCJhIjoiY2prM2dqNWhiMTMwYzNrcnRmY2NnajI1cCJ9.g8-mLbubDPgqUv-CBx65Xg",
+      container: "map",
+      initialViewState: {
+        longitude: 0,
+        latitude: 0,
+        zoom: 4,
+        pitch: 45,
+      },
+      controller: true,
+    });
+
+    const binaryLocation = new Float32Array([
+      0,
+      0,
+      0,
+      0,
+      5,
+      1000,
+      5,
+      5,
+      100000,
+      5,
+      0,
+      1000,
+      0,
+      0,
+      0,
+      5,
+      5,
+      100000,
+      5,
+      10,
+      1000,
+      10,
+      10,
+      0,
+      10,
+      5,
+      1000,
+      5,
+      5,
+      100000,
+    ]);
+
+    const binaryColour = new Float32Array([
+      0.2666667,
+      0.003921569,
+      0.3294118,
+      1,
+      0.1921569,
+      0.4078431,
+      0.5568627,
+      1,
+      0.2078431,
+      0.7176471,
+      0.4745098,
+      1,
+      0.9921569,
+      0.9058824,
+      0.145098,
+      1,
+      0.2666667,
+      0.003921569,
+      0.3294118,
+      1,
+      0.2078431,
+      0.7176471,
+      0.4745098,
+      1,
+      0.1921569,
+      0.4078431,
+      0.5568627,
+      1,
+      0.2666667,
+      0.003921569,
+      0.3294118,
+      1,
+      0.9921569,
+      0.9058824,
+      0.145098,
+      1,
+      0.2078431,
+      0.7176471,
+      0.4745098,
+      1,
+    ]);
+    //const binaryColour = new Float32Array([68,1,84,255,49,104,142,255,53,18,121,255,253,231,37,255]);
+    const binaryElevation = new Float32Array([0, 0, 0, 0, 0]);
+    const startIndices = new Uint16Array([0, 5]);
+
+    const polygonLayer = new deck.SolidPolygonLayer({
+      map_id: "map",
+      id: "poly",
+      data: {
+        length: 2,
+        startIndices: startIndices,
+        attributes: {
+          getPolygon: { value: binaryLocation, size: 3 },
+          getFillColor: { value: binaryColour, size: 4 },
+          getLineColor: { value: binaryColour, size: 4 },
+          getElevation: { value: binaryElevation, size: 1 },
+        },
+      },
+      //positionFormat: 'XYZ',
+      _normalize: false,
+      extruded: false,
+    });
+
+    deckgl.setProps({ layers: [polygonLayer] });
+  </script>
+</html>
